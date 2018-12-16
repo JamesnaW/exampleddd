@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+  api:
+    environment:
+      - DBCONN=postgres://pqgotest:password@localhost/pqgotest?sslmode=verify-full
+      - PORT=3333
+      - GO111MODULE=on
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: exampleddd-api
+    command:
+      bash run.sh
+    volumes:
+      - ".:/go/src/exampleddd"
+    ports:
+      - "3333:3333"
+    links:
+      - db
